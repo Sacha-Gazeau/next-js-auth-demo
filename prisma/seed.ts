@@ -1,5 +1,8 @@
+import bcrypt from "bcrypt";
 import { PrismaClient } from "../src/app/_generated/prisma";
-
+async function hashPassword(password: string) {
+  return await bcrypt.hash(password, 10);
+}
 const prisma = new PrismaClient();
 async function main() {
   await prisma.post.deleteMany();
@@ -8,6 +11,7 @@ async function main() {
     data: {
       email: "karel.desmet@arteveldehs.be",
       name: "Karel De Smet",
+      hashedPassword: await hashPassword("test"),
       posts: {
         create: [
           { title: "Prisma Day 2020" },
@@ -20,6 +24,7 @@ async function main() {
     data: {
       email: "john.doe@something.com",
       name: "John Doe",
+      hashedPassword: await hashPassword("test"),
       posts: {
         create: [
           { title: "How to remain completely anonymous" },
